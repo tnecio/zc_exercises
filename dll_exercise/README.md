@@ -20,3 +20,8 @@ make test
 ```
 
 Clean with `make clean`.
+
+## Notes
+
+I think the specified function would be better called something like `insert_right`, and then we could have
+a symmetric function `insert_left` inserting new node to the left of the existing one.
