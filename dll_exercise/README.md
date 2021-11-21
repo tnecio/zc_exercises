@@ -5,7 +5,7 @@ Knowing no context of how the code is being used, I've decided to put on the cal
 - New is not a part of a list already. This is to avoid issue with "what to do with the New's old list?"
 - Prev and New are not null pointers (the meaning of "insert" in this case would become very ambiguous)
 
-In the implementation I've included guards against the null pointers in wrong places, these can be removed or turned into assertions – depending on what is the approach to null arguments in the larger code base, and what do we agree is the most convenient behaviour for this function.
+In the implementation I've included assertion guards against the null pointers in wrong places, these can be removed – depending on what is the approach to null arguments in the code base, and what do we agree is the most convenient behaviour for this particular function.
 
 Also included is one test in `test.c`.
 

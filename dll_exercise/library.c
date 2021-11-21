@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "library.h"
 
 /*
@@ -7,12 +8,8 @@
  * New must not be a member of any list (i.e. New->left and New->right must be NULL)
  */
 void insert (NODE *Prev, NODE *New) {
-    if (!Prev || !New) {
-        return;
-    }
-    if (New->left || New->right) {
-        return;
-    }
+    // NULL guards; might be useful for a public API, might remove them if we trust the caller
+    assert ( Prev && New && New->left && New->right );
 
     NODE *OldRight = Prev->right; // Might be NULL
     Prev->right = New;
