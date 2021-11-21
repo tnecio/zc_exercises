@@ -1,0 +1,25 @@
+{
+  "books": [
+    {
+      "id": 0,
+      "name": "The Lord of the Rings",
+      "author": "J. R. R. Tolkien",
+      "copies_total": 3,
+      "copies_lent": 2
+    },
+    {
+      "id": 1,
+      "name": "The Little Prince",
+      "author": "Antoine de Saint-Exupéry",
+      "copies_total": 1,
+      "copies_lent": 1
+    },
+    {
+      "id": 2,
+      "name": "Sophie's World",
+      "author": "Jostein Gaarder",
+      "copies_total": 2,
+      "copies_lent": 0
+    }
+  ]
+}
