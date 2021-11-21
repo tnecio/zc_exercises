@@ -51,6 +51,11 @@ fn parse_args() -> ArgMatches<'static> {
         .get_matches()
 }
 
+fn fail_gracefully(display_str: &str) -> ! {
+    eprintln!("{}", display_str);
+    exit(1)
+}
+
 fn main() {
     let args = parse_args();
     let path = args.value_of("file").unwrap_or("library.json");
@@ -68,8 +73,10 @@ fn main() {
 }
 
 fn read_library(path: &Path) -> Library {
-    let config_file = File::open(path).expect("Cannot read file");
-    serde_json::from_reader(config_file).expect("Cannot parse file")
+    let config_file = File::open(path)
+        .unwrap_or_else(|_| fail_gracefully("Cannot read file"));
+    serde_json::from_reader(config_file)
+        .unwrap_or_else(|_| fail_gracefully("Cannot parse file"))
 }
 
 fn write_library(path: &Path, library: &Library) {
@@ -77,14 +84,17 @@ fn write_library(path: &Path, library: &Library) {
         .create(true)
         .write(true)
         .truncate(true)
-        .open(path).expect("Cannot open file for writing");
-    serde_json::to_writer_pretty(config_file, library).expect("Cannot save library");
+        .open(path)
+        .unwrap_or_else(|_| fail_gracefully("Cannot open file for writing"));
+    serde_json::to_writer_pretty(config_file, library)
+        .unwrap_or_else(|_| fail_gracefully("Cannot save library to file"));
 }
 
 fn lend(args: &ArgMatches, config_file_path: &Path) {
     let book_id: u32 = value_t_or_exit!(args, "ID", u32);
     let mut library = read_library(config_file_path);
-    let mut book = library.books.iter_mut().filter(|x| x.id == book_id).nth(0).expect("Book ID not found");
+    let mut book = library.books.iter_mut().filter(|x| x.id == book_id).nth(0)
+        .unwrap_or_else(|| fail_gracefully("Book ID not found"));
 
     if book.copies_lent == book.copies_total {
         eprintln!("All copies of {} are lent out.", book.name);
@@ -98,7 +108,8 @@ fn lend(args: &ArgMatches, config_file_path: &Path) {
 fn return_book(args: &ArgMatches, config_file_path: &Path) {
     let book_id: u32 = value_t_or_exit!(args, "ID", u32);
     let mut library = read_library(config_file_path);
-    let mut book = library.books.iter_mut().filter(|x| x.id == book_id).nth(0).expect("Book ID not found");
+    let mut book = library.books.iter_mut().filter(|x| x.id == book_id).nth(0)
+        .unwrap_or_else(|| fail_gracefully("Book ID not found"));
 
     if book.copies_lent == 0 {
         eprintln!("No copies of {} are lent out.", book.name);
